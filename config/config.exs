@@ -11,6 +11,10 @@ config :pantograf,
   ecto_repos: [Pantograf.Repo],
   generators: [timestamp_type: :utc_datetime]
 
+config :pantograf, Pantograf.Repo,
+  types: Pantograf.PostgrexTypes,
+  migration_primary_key: [name: :id, type: :binary_id]
+
 # Configures the endpoint
 config :pantograf, PantografWeb.Endpoint,
   url: [host: "localhost"],
