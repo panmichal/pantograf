@@ -17,6 +17,8 @@ defmodule PantografWeb.Router do
   scope "/", PantografWeb do
     pipe_through :browser
 
+    live "/transit/map/:location", TransitLive.Index, :index
+
     get "/", PageController, :home
   end
 

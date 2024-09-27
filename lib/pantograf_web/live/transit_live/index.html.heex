@@ -1,0 +1,12 @@
+<%= if is_nil(@network) do %>
+  <div style="width: 100%; margin: 0 auto;">Location not found</div>
+<% else %>
+  <div style="width: 100%; margin: 0 auto;">
+    <.live_component
+      module={PantografWeb.TransitLive.MapComponent}
+      id="transit-map"
+      center={@center}
+      network={@network}
+    />
+  </div>
+<% end %>
