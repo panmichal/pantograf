@@ -59,7 +59,12 @@ defmodule Pantograf.MixProject do
       {:jason, "~> 1.2"},
       {:dns_cluster, "~> 0.1.1"},
       {:bandit, "~> 1.5"},
-      {:csv, "~> 3.2"}
+      {:csv, "~> 3.2"},
+      {:maplibre, "~> 0.1.9"},
+      {:geo, "~> 3.4"},
+      {:geo_postgis, "~> 3.4"},
+      {:req, "~> 0.5.0"},
+      {:httpoison, "~> 1.8"}
     ]
   end
 
