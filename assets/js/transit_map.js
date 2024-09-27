@@ -22,9 +22,10 @@ const TransitMap = {
             });
 
             map.on("click", (e) => {
-                this.pushEvent("calculate_accessibility", { from: e.lngLat }, ({ nearby_stops }) => {
+                this.pushEvent("calculate_accessibility", { from: e.lngLat }, ({ nearby_stops, accessible_shapes }) => {
                     console.log(nearby_stops)
                     map.getSource('stops').setData(nearby_stops);
+                    map.getSource('shapes').setData(accessible_shapes);
                 });
             })
         });

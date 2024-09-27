@@ -30,10 +30,16 @@ defmodule PantografWeb.TransitLive.Index do
       Pantograf.Transit.get_nearby_stops(
         value["from"]["lat"],
         value["from"]["lng"],
-        400,
+        300,
         socket.assigns.network
       )
 
-    {:reply, %{nearby_stops: Pantograf.Transit.GTFS.stops_to_features(nearby_stops)}, socket}
+    accessible_shapes = Pantograf.Transit.get_shapes_for_stops(nearby_stops)
+
+    {:reply,
+     %{
+       accessible_shapes: Pantograf.Transit.GTFS.shapes_to_features(accessible_shapes),
+       nearby_stops: Pantograf.Transit.GTFS.stops_to_features(nearby_stops)
+     }, socket}
   end
 end

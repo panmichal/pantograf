@@ -5,6 +5,7 @@ defmodule Pantograf.Transit do
 
   alias Pantograf.Transit.GTFS
   alias Pantograf.Transit.Network
+  alias Pantograf.Transit.Shape
   alias Pantograf.Transit.Stop
   alias Pantograf.Transit.StopTime
   alias Pantograf.Transit.Trip
@@ -64,36 +65,13 @@ defmodule Pantograf.Transit do
     |> Ecto.Multi.run(:stop_times, fn repo, %{network: network, trips: trips} ->
       stop_times = update_stop_times_assocs(stop_times, network.stops, trips)
 
-      validated = stop_times
+      Enum.chunk_every(stop_times, 9000)
+      |> Enum.each(fn chunk ->
+        IO.inspect("Insert 9000 stop times")
+        repo.insert_all(StopTime, chunk)
+      end)
 
-      # validated =
-      #   Enum.reduce_while(Enum.with_index(stop_times), [], fn {stop_time, index}, insert_data ->
-      #     changeset = StopTime.changeset(%StopTime{}, stop_time)
-
-      #     if changeset.valid? do
-      #       IO.inspect("Stop time #{index} valid")
-      #       {:cont, insert_data ++ [stop_time]}
-      #     else
-      #       {:halt, {:error, changeset}}
-      #     end
-      #   end)
-
-      case validated do
-        {:error, changeset} ->
-          {:error, changeset}
-
-        insert_data ->
-          IO.inspect("STOP TIMES VALID")
-
-          Enum.chunk_every(insert_data, 9000)
-          |> Enum.each(fn chunk ->
-            IO.inspect("Insert 9000 stop times")
-            repo.insert_all(StopTime, chunk)
-          end)
-
-          IO.inspect("STOP TIMES CREATED")
-          {:ok, :created_stop_times}
-      end
+      {:ok, :created_stop_times}
     end)
     |> Repo.transaction(timeout: :infinity)
   end
@@ -102,16 +80,10 @@ defmodule Pantograf.Transit do
     [ah, am, as] = String.split(attrs[:arrival_time], ":") |> Enum.map(&String.to_integer/1)
     [dh, dm, ds] = String.split(attrs[:departure_time], ":") |> Enum.map(&String.to_integer/1)
 
-    # ah = String.to_integer(ah)
-    # dh = String.to_integer(dh)
-
     departure_day = div(dh, 24)
 
     ah = rem(ah, 24)
     dh = rem(dh, 24)
-
-    # ah = Integer.to_string(ah) |> String.pad_leading(2, "0")
-    # dh = Integer.to_string(dh) |> String.pad_leading(2, "0")
 
     Map.merge(attrs, %{
       arrival_time: Time.new!(ah, am, as),
@@ -121,8 +93,6 @@ defmodule Pantograf.Transit do
   end
 
   defp update_stop_times_assocs(stop_times, stops, trips) do
-    now = NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
-
     Enum.map(stop_times, fn stop_time ->
       stop_id = stop_time.stop_id
       stop = Enum.find(stops, fn stop -> stop.identifier == stop_id end) |> Map.from_struct()
@@ -209,5 +179,16 @@ defmodule Pantograf.Transit do
    Returns all shapes that pass through the given stops.
   """
   def get_shapes_for_stops(stops) do
+    stop_ids = Enum.map(stops, & &1.id)
+
+    query =
+      from sh in Shape,
+        distinct: sh.id,
+        join: t in assoc(sh, :trips),
+        join: s in assoc(t, :stops),
+        preload: [:routes],
+        where: s.id in ^stop_ids
+
+    Repo.all(query)
   end
 end

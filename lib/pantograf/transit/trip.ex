@@ -9,6 +9,9 @@ defmodule Pantograf.Transit.Trip do
     belongs_to :route, Pantograf.Transit.Route
     belongs_to :shape, Pantograf.Transit.Shape
 
+    has_many :stop_times, Pantograf.Transit.StopTime
+    has_many :stops, through: [:stop_times, :stop]
+
     timestamps(inserted_at: :created_at, updated_at: :updated_at)
   end
 
