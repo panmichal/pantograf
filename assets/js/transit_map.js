@@ -5,9 +5,11 @@ const TransitMap = {
     mounted() {
         let map = null;
         let stops = null;
+        let routes = []
         this.props = { id: this.el.getAttribute("data-id") };
-        this.handleEvent(`map:${this.props.id}:center`, ({ center }) => {
+        this.handleEvent(`map:${this.props.id}:center`, ({ center, routes }) => {
             map.jumpTo({ center: center, zoom: 11 });
+            routes = routes;
         })
         this.handleEvent(`map:${this.props.id}:init`, ({ ml, center }) => {
             const map_params = { container: "map", style: ml, zoom: 14, center: center }
@@ -24,6 +26,7 @@ const TransitMap = {
             map.on("click", (e) => {
                 this.pushEvent("calculate_accessibility", { from: e.lngLat }, ({ nearby_stops, accessible_shapes }) => {
                     console.log(nearby_stops)
+                    console.log(accessible_shapes)
                     map.getSource('stops').setData(nearby_stops);
                     map.getSource('shapes').setData(accessible_shapes);
                 });

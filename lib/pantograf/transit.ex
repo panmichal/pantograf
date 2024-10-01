@@ -191,4 +191,14 @@ defmodule Pantograf.Transit do
 
     Repo.all(query)
   end
+
+  @doc """
+  Returns all unique routes the given shapes are associated with.
+  Naive implementation for now.
+  """
+  def get_routes_for_shapes(shapes) do
+    shapes
+    |> Enum.flat_map(& &1.routes)
+    |> Enum.uniq_by(& &1.id)
+  end
 end

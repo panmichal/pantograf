@@ -3,6 +3,7 @@ defmodule Pantograf.Transit.Route do
 
   import Ecto.Changeset
 
+  @derive {Jason.Encoder, only: [:id, :short_name, :long_name, :type, :custom_type]}
   schema "transit_routes" do
     field :identifier, :string
     field :short_name, :string

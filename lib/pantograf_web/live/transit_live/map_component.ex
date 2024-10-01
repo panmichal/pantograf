@@ -4,7 +4,7 @@ defmodule PantografWeb.TransitLive.MapComponent do
   alias MapLibre
   alias Pantograf.MapTiler
 
-  def update(_assigns, socket) do
+  def update(assigns, socket) do
     socket =
       socket
       |> assign(id: socket.id)
@@ -23,7 +23,8 @@ defmodule PantografWeb.TransitLive.MapComponent do
     {:ok,
      push_event(socket, "map:#{socket.id}:init", %{
        "ml" => ml |> MapLibre.to_spec(),
-       "mode" => "accessibility"
+       "mode" => "accessibility",
+       "routes" => assigns.network.routes
      })}
   end
 
