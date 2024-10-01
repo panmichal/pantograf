@@ -5,6 +5,7 @@ defmodule Pantograf.Transit do
 
   alias Pantograf.Transit.GTFS
   alias Pantograf.Transit.Network
+  alias Pantograf.Transit.Route
   alias Pantograf.Transit.Shape
   alias Pantograf.Transit.Stop
   alias Pantograf.Transit.StopTime
@@ -196,6 +197,7 @@ defmodule Pantograf.Transit do
   Returns all unique routes the given shapes are associated with.
   Naive implementation for now.
   """
+  @spec get_routes_for_shapes([Shape.t()]) :: [Route.t()]
   def get_routes_for_shapes(shapes) do
     shapes
     |> Enum.flat_map(& &1.routes)

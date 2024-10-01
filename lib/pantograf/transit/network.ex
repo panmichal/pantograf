@@ -2,6 +2,8 @@ defmodule Pantograf.Transit.Network do
   use Pantograf.Schema
   import Ecto.Changeset
 
+  @type t :: %__MODULE__{}
+
   schema "transit_networks" do
     field :location, :string
 

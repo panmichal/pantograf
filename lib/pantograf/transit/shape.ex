@@ -2,6 +2,8 @@ defmodule Pantograf.Transit.Shape do
   use Pantograf.Schema
   import Ecto.Changeset
 
+  @type t :: %__MODULE__{}
+
   schema "transit_shapes" do
     field :identifier, :string
     field :points, Geo.PostGIS.Geometry

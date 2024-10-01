@@ -2,6 +2,8 @@ defmodule Pantograf.Transit.Stop do
   use Pantograf.Schema
   import Ecto.Changeset
 
+  @type t :: %__MODULE__{}
+
   schema "transit_stops" do
     field :name, :string
     field :code, :string

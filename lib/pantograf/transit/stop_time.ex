@@ -2,6 +2,8 @@ defmodule Pantograf.Transit.StopTime do
   use Pantograf.Schema
   import Ecto.Changeset
 
+  @type t :: %__MODULE__{}
+
   schema "transit_stop_times" do
     field :arrival_time, :time
     field :departure_time, :time
