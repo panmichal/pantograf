@@ -13,7 +13,7 @@ defmodule PantografWeb.TransitLive.Index do
       socket
       |> assign(:center, center)
       |> assign(:network, network)
-      |> assign(:accessible_routes, [])
+      |> assign(:accessible_routes, %{})
       |> start_async(:geocode, fn -> Geocode.forward_geocode("wroclaw") end)
 
     {:ok, socket, layout: false}
@@ -36,7 +36,11 @@ defmodule PantografWeb.TransitLive.Index do
       )
 
     accessible_shapes = Pantograf.Transit.get_shapes_for_stops(nearby_stops)
-    accessible_routes = Pantograf.Transit.get_routes_for_shapes(accessible_shapes)
+
+    accessible_routes =
+      accessible_shapes
+      |> Pantograf.Transit.get_routes_for_shapes()
+      |> Pantograf.Transit.group_routes()
 
     {:reply,
      %{

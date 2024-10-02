@@ -10,20 +10,25 @@
     />
   </div>
 
-  <%= if @accessible_routes |> length > 0 do %>
+  <%= if @accessible_routes != %{} do %>
     <div
       class="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
       style="position: fixed; top: 10px; left: 10px;"
     >
       <p class="mb-2 text-xs font-bold tracking-tight text-gray-900 dark:text-white">
-        Routes with direct access within 300 meters
+        Routes with direct access within 300m radius
       </p>
       <p class="font-normal text-xs text-gray-700 dark:text-gray-400">
-        <ul class="list-none font-normal text-xs text-gray-700 dark:text-gray-400">
-          <%= for route <- @accessible_routes do %>
-            <li><%= route.short_name %></li>
-          <% end %>
-        </ul>
+        <%= for {_route_cetegory, routes_in_category} <- @accessible_routes do %>
+          <ul class="list-none font-normal text-xs text-gray-700 dark:text-gray-400">
+            <%= for {route_type, routes_in_type} <- routes_in_category do %>
+              <li><%= route_type %>:</li>
+              <%= for route <- routes_in_type do %>
+                <%= route.short_name %>
+              <% end %>
+            <% end %>
+          </ul>
+        <% end %>
       </p>
     </div>
   <% end %>

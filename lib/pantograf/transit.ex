@@ -208,11 +208,11 @@ defmodule Pantograf.Transit do
   Groups trips by type and by custom type within each type group.
   Sorts the top-level groups by type.
   """
-  @spec sort_routes([Route.t()]) :: map()
-  def sort_routes(routes) do
+  @spec group_routes([Route.t()]) :: map()
+  def group_routes(routes) do
     Enum.group_by(routes, &{&1.type, &1.custom_type})
     |> Enum.group_by(fn {{type, _}, _} -> type end, fn {{_, custom_type}, routes} ->
-      %{custom_type => routes}
+      {custom_type, routes}
     end)
     |> Enum.sort_by(fn {type, _} -> type end)
     |> Enum.into(%{})
