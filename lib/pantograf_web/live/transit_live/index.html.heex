@@ -34,4 +34,30 @@
       </p>
     </div>
   <% end %>
+
+  <div
+    class="w-full block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
+    style="position: fixed; top: 10px; right: 10px;"
+  >
+    <form phx-change="update_settings">
+      <div class="radius p-4">
+        <span class="text-sm">Stops in</span>
+        <span class="text-sm"><%= @radius %>m radius</span>
+        <input
+          class="w-full accent-indigo-600"
+          type="range"
+          name="radius"
+          value="300"
+          min="100"
+          max="1000"
+          step="50"
+          phx-debounce="500"
+        />
+        <div class="-mt-2 flex w-full justify-between">
+          <span class="text-sm text-gray-600">100</span>
+          <span class="text-sm text-gray-600">1000</span>
+        </div>
+      </div>
+    </form>
+  </div>
 <% end %>

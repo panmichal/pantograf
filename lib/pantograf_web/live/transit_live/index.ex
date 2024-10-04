@@ -14,6 +14,7 @@ defmodule PantografWeb.TransitLive.Index do
       |> assign(:center, center)
       |> assign(:network, network)
       |> assign(:accessible_routes, %{})
+      |> assign(:radius, 300)
       |> start_async(:geocode, fn -> Geocode.forward_geocode("wroclaw") end)
 
     {:ok, socket, layout: false}
@@ -26,12 +27,16 @@ defmodule PantografWeb.TransitLive.Index do
      })}
   end
 
+  def handle_event("update_settings", %{"radius" => radius}, socket) do
+    {:noreply, assign(socket, :radius, radius)}
+  end
+
   def handle_event("calculate_accessibility", value, socket) do
     nearby_stops =
       Pantograf.Transit.get_nearby_stops(
         value["from"]["lat"],
         value["from"]["lng"],
-        300,
+        socket.assigns.radius,
         socket.assigns.network
       )
 
