@@ -22,9 +22,11 @@
         <%= for {_route_cetegory, routes_in_category} <- @accessible_routes do %>
           <ul class="list-none font-normal text-xs text-gray-700 dark:text-gray-400">
             <%= for {route_type, routes_in_type} <- routes_in_category do %>
-              <li><%= route_type %>:</li>
+              <li class="pb-2 pt-2"><%= route_type %>:</li>
               <%= for route <- routes_in_type do %>
-                <%= route.short_name %>
+                <span class="leading-6 bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">
+                  <%= route.short_name %>
+                </span>
               <% end %>
             <% end %>
           </ul>
