@@ -32,6 +32,12 @@ const TransitMap = {
                 });
             })
         });
+
+        this.handleEvent(`map:${this.props.id}:update_accessible_shapes`, ({ accessible_shapes, nearby_stops }) => {
+            console.log("UPDATE SHAPES")
+            map.getSource('stops').setData(nearby_stops);
+            map.getSource('shapes').setData(accessible_shapes);
+        });
     },
 };
 

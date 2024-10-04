@@ -28,7 +28,33 @@ defmodule PantografWeb.TransitLive.Index do
   end
 
   def handle_event("update_settings", %{"radius" => radius}, socket) do
-    {:noreply, assign(socket, :radius, radius)}
+    IO.inspect(radius)
+
+    nearby_stops =
+      Pantograf.Transit.get_nearby_stops(
+        socket.assigns.from["lat"],
+        socket.assigns.from["lng"],
+        String.to_integer(radius),
+        socket.assigns.network
+      )
+
+    accessible_shapes = Pantograf.Transit.get_shapes_for_stops(nearby_stops)
+
+    accessible_routes =
+      accessible_shapes
+      |> Pantograf.Transit.get_routes_for_shapes()
+      |> Pantograf.Transit.group_routes()
+
+    socket =
+      socket
+      |> assign(:accessible_routes, accessible_routes)
+      |> assign(:radius, radius)
+
+    {:noreply,
+     push_event(socket, "map:#{socket.id}:update_accessible_shapes", %{
+       accessible_shapes: Pantograf.Transit.GTFS.shapes_to_features(accessible_shapes),
+       nearby_stops: Pantograf.Transit.GTFS.stops_to_features(nearby_stops)
+     })}
   end
 
   def handle_event("calculate_accessibility", value, socket) do
@@ -46,6 +72,11 @@ defmodule PantografWeb.TransitLive.Index do
       accessible_shapes
       |> Pantograf.Transit.get_routes_for_shapes()
       |> Pantograf.Transit.group_routes()
+
+    socket =
+      socket
+      |> assign(:accessible_routes, accessible_routes)
+      |> assign(:from, value["from"])
 
     {:reply,
      %{
