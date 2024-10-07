@@ -12,7 +12,7 @@
 
   <%= if @accessible_routes != %{} do %>
     <div
-      class="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
+      class="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
       style="position: fixed; top: 10px; left: 10px;"
     >
       <p class="mb-2 text-xs font-bold tracking-tight text-gray-900 dark:text-white">
@@ -36,7 +36,7 @@
   <% end %>
 
   <div
-    class="w-full block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
+    class="w-1/4 block max-w-xs p-2 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
     style="position: fixed; top: 10px; right: 10px;"
   >
     <form phx-change="update_settings">
