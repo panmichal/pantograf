@@ -11,28 +11,11 @@
   </div>
 
   <%= if @accessible_routes != %{} do %>
-    <div
-      class="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
-      style="position: fixed; top: 10px; left: 10px;"
-    >
-      <p class="mb-2 text-xs font-bold tracking-tight text-gray-900 dark:text-white">
-        Routes with direct access within 300m radius
-      </p>
-      <p class="font-normal text-xs text-gray-700 dark:text-gray-400">
-        <%= for {_route_cetegory, routes_in_category} <- @accessible_routes do %>
-          <ul class="list-none font-normal text-xs text-gray-700 dark:text-gray-400">
-            <%= for {route_type, routes_in_type} <- routes_in_category do %>
-              <li class="pb-2 pt-2"><%= route_type %>:</li>
-              <%= for route <- routes_in_type do %>
-                <span class="leading-6 bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">
-                  <%= route.short_name %>
-                </span>
-              <% end %>
-            <% end %>
-          </ul>
-        <% end %>
-      </p>
-    </div>
+    <.live_component
+      module={PantografWeb.TransitLive.RoutesCardComponent}
+      id="routes-card"
+      routes={@accessible_routes}
+    />
   <% end %>
 
   <div
@@ -41,8 +24,8 @@
   >
     <form phx-change="update_settings">
       <div class="radius p-4">
-        <span class="text-sm">Stops in</span>
-        <span class="text-sm"><%= @radius %>m radius</span>
+        <span class="text-sm">Search radius for stops: </span>
+        <span class="text-sm"><%= @radius %>m</span>
         <input
           class="w-full accent-indigo-600"
           type="range"
