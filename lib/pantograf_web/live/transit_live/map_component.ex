@@ -40,8 +40,13 @@ defmodule PantografWeb.TransitLive.MapComponent do
       source: "shapes",
       type: :line,
       paint: %{
-        "line-color" => "#0000ff",
-        "line-width" => 1
+        "line-color" => [
+          "case",
+          ["boolean", ["feature-state", "highlight"], false],
+          "#00ffff",
+          "#0000ff"
+        ],
+        "line-width" => ["case", ["boolean", ["feature-state", "highlight"], false], 3, 1]
       }
     )
   end

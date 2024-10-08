@@ -13,8 +13,6 @@ const TransitMap = {
         })
         this.handleEvent(`map:${this.props.id}:init`, ({ ml, center }) => {
             const map_params = { container: "map", style: ml, zoom: 14, center: center }
-            console.log(ml)
-
             map = new maplibregl.Map(map_params);
 
             map.on("load", () => {
@@ -25,20 +23,42 @@ const TransitMap = {
 
             map.on("click", (e) => {
                 this.pushEvent("calculate_accessibility", { from: e.lngLat }, ({ nearby_stops, accessible_shapes }) => {
-                    console.log(nearby_stops)
-                    console.log(accessible_shapes)
                     map.getSource('stops').setData(nearby_stops);
                     map.getSource('shapes').setData(accessible_shapes);
                 });
             })
         });
 
+        this.handleEvent(`map:highlight_route`, ({ route_id }) => {
+            console.log(route_id)
+            map.setFilter('shapes', ['in', ["literal", route_id], ["get", "routes"]]);
+        });
+
+
         this.handleEvent(`map:${this.props.id}:update_accessible_shapes`, ({ accessible_shapes, nearby_stops }) => {
-            console.log("UPDATE SHAPES")
             map.getSource('stops').setData(nearby_stops);
             map.getSource('shapes').setData(accessible_shapes);
         });
     },
 };
 
-export default TransitMap;
+const RoutesCard = {
+    mounted() {
+        const badges = this.el.getElementsByClassName("route-badge");
+        Array.from(badges).forEach(route => {
+            route.addEventListener("mouseover", () => {
+                this.pushEvent("highlight_route", { route_id: route.getAttribute("data-route-id") })
+            });
+        });
+    },
+    updated() {
+        const badges = this.el.getElementsByClassName("route-badge");
+        Array.from(badges).forEach(route => {
+            route.addEventListener("mouseover", () => {
+                this.pushEvent("highlight_route", { route_id: route.getAttribute("data-route-id") })
+            });
+        });
+    }
+}
+
+export { TransitMap, RoutesCard };

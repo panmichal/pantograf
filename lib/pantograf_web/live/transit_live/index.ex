@@ -28,8 +28,6 @@ defmodule PantografWeb.TransitLive.Index do
   end
 
   def handle_event("update_settings", %{"radius" => radius}, socket) do
-    IO.inspect(radius)
-
     nearby_stops =
       Pantograf.Transit.get_nearby_stops(
         socket.assigns.from["lat"],
@@ -54,6 +52,15 @@ defmodule PantografWeb.TransitLive.Index do
      push_event(socket, "map:#{socket.id}:update_accessible_shapes", %{
        accessible_shapes: Pantograf.Transit.GTFS.shapes_to_features(accessible_shapes),
        nearby_stops: Pantograf.Transit.GTFS.stops_to_features(nearby_stops)
+     })}
+  end
+
+  def handle_event("highlight_route", %{"route_id" => route_id}, socket) do
+    socket = assign(socket, :highlighted_route, route_id)
+
+    {:noreply,
+     push_event(socket, "map:highlight_route", %{
+       route_id: route_id
      })}
   end
 
